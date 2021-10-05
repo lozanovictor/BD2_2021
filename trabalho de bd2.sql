@@ -1,15 +1,14 @@
-createlang plpgsql -U bccibm21g8 -h 192.168.122.58 fisiot
-
-CREATE OR REPLACE FUNCION
-RETURNS
-AS
+CREATE OR REPLACE FUNCION limpa_salario
+RETURNS INT
+AS 
 $$
+  UPDATE Funcionario SET f_conbank = 0 WHERE f_Situacao = FALSE;
 $$
 LANGUAGE 'plpgsql';
 
-CREATE TRIGGER
-AFTER
-EXECUTE PROCEDURE;
+CREATE TRIGGER limpar_salario
+AFTER UPDATE ON Funcionario FOR EACH ROW
+EXECUTE PROCEDURE limpa_salario();
 
 
 CREATE OR REPLACE FUNCION
