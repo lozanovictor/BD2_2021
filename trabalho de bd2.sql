@@ -1,4 +1,6 @@
-
+Victor Hugo Constantino Lozano - 8910903
+Evillyn Milena da Gama - 10850428
+Douglas Feltrim - 9001585
 
 /* Função 1*/
 CREATE OR REPLACE FUNCTION ultima_consulta()
