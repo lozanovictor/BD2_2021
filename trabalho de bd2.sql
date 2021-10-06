@@ -1,17 +1,48 @@
-CREATE OR REPLACE FUNCION limpa_salario
-RETURNS INT
-AS 
+
+
+/* Função 1 e gatilho*/
+
+CREATE OR REPLACE FUNCTION limpa_contbank()
+RETURNS TRIGGER AS
 $$
-  UPDATE Funcionario SET f_conbank = 0 WHERE f_Situacao = FALSE;
+BEGIN
+  UPDATE funcionario SET f_conbank = 0 FROM funcionario WHERE f_situacao = FALSE;
+END;
 $$
 LANGUAGE 'plpgsql';
 
-CREATE TRIGGER limpar_salario
-AFTER UPDATE ON Funcionario FOR EACH ROW
-EXECUTE PROCEDURE limpa_salario();
+CREATE TRIGGER limpar_contbank
+AFTER UPDATE ON funcionario FOR EACH ROW
+EXECUTE PROCEDURE limpa_contbank();
+
+/* Função 1*/
+CREATE OR REPLACE FUNCTION ultima_consulta()
+RETURNS TIME AS
+$$
+BEGIN
+  SELECT p_codigo, r_data, CURRENT_DATE-r_data AS dias_ult_cons FROM registro
+  WHERE CURRENT_DATE-r_data >90;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+/* 2 função */
+CREATE OR REPLACE FUNCTION count_total(registro.p_codigo%TYPE)
+RETURNS NUMERIC AS
+$$
+DECLARE
+  cod_reg alias for $1;
+BEGIN
+  SELECT COUNT(registro.p_codigo), paciente.p_nome FROM registro, paciente
+  WHERE paciente.p_codigo=$1
+  GROUP BY paciente.p_codigo;
+END;
+$$
+LANGUAGE 'plpgsql';
 
 
-CREATE OR REPLACE FUNCION
+/* 3 função*/
+CREATE OR REPLACE FUNCTION
 RETURNS
 AS
 $$
@@ -24,7 +55,7 @@ EXECUTE PROCEDURE;
 
 
 
-CREATE OR REPLACE FUNCION
+CREATE OR REPLACE FUNCTION
 RETURNS
 AS
 $$
@@ -36,33 +67,7 @@ AFTER
 EXECUTE PROCEDURE;
 
 
-
-CREATE OR REPLACE FUNCION
-RETURNS
-AS
-$$
-$$
-LANGUAGE 'plpgsql';
-
-CREATE TRIGGER
-AFTER
-EXECUTE PROCEDURE;
-
-
-
-CREATE OR REPLACE FUNCION
-RETURNS
-AS
-$$
-$$
-LANGUAGE 'plpgsql';
-
-CREATE TRIGGER
-AFTER
-EXECUTE PROCEDURE;
-
-
-CREATE OR REPLACE FUNCION
+CREATE OR REPLACE FUNCTION
 RETURNS
 AS
 $$
@@ -70,31 +75,7 @@ $$
 LANGUAGE 'plpgsql';
 
 
-CREATE OR REPLACE FUNCION
-RETURNS
-AS
-$$
-$$
-LANGUAGE 'plpgsql';
-
-
-CREATE OR REPLACE FUNCION
-RETURNS
-AS
-$$
-$$
-LANGUAGE 'plpgsql';
-
-
-CREATE OR REPLACE FUNCION
-RETURNS
-AS
-$$
-$$
-LANGUAGE 'plpgsql';
-
-
-CREATE OR REPLACE FUNCION
+CREATE OR REPLACE FUNCTION
 RETURNS
 AS
 $$
