@@ -42,10 +42,20 @@ LANGUAGE 'plpgsql';
 
 
 /* 3 função*/
-CREATE OR REPLACE FUNCTION
-RETURNS
-AS
+CREATE OR REPLACE FUNCTION count_procedimento(procedimento.f_codigo%TYPE)
+RETURNS NUMERIC AS
 $$
+DECLARE
+  cod_atendente alias for $1;
+BEGIN
+  SELECT COUNT(procedimento.seq_proc), funcionario.f_nome, funcionario.f_codigo, atendente.f_codigo FROM funcionario
+  INNER JOIN
+  procedimento ON atendente.f_codigo=procedimento.f_codigo
+  INNER JOIN
+  atendente ON funcionario.f_codigo=atendente.f_codigo
+  WHERE procedimento.f_codigo=4
+  GROUP BY atendente.f_codigo;
+END;
 $$
 LANGUAGE 'plpgsql';
 
